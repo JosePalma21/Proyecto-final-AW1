@@ -1,0 +1,119 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #e8f5e9;
+}
+
+.container {
+    width: 100%; 
+    height: 100%; 
+    background-color: #e8f5e9;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+h1 {
+    text-align: center;
+    color: #388e3c; 
+    margin-bottom: 20px;
+}
+
+.form-group {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #2d572c;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 150%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.codigo-usuario {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    margin-bottom: 20px; 
+
+}
+
+.codigo-usuario label {
+    font-size: 18px; 
+    margin-bottom: 10px; 
+    color: #2d572c;
+}
+
+.codigo-usuario input[type="text"] {
+    width: 200px; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px; 
+}
+
+.codigo-usuario button {
+    width: 200px; 
+    padding: 10px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.codigo-usuario button:hover {
+    background-color: #4cae4c; 
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+}
+
+.success {
+    color: green;
+    margin-top: 10px;
+}
+
+.logo-img {
+    display: block;
+    margin: 0 auto 20px;
+    max-width: 200px;
+    height: auto;
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Principal Estacionamiento ULEAM</title>
+    <link rel="stylesheet" href="pantallaprincipal.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="user-menu">
+            <img src="/img/perfil.png" alt="Usuario" class="user-icon" id="user-icon">
+            <div class="dropdown" id="dropdown-menu">
+                <a href="config-perfil.html" class="dropdown-item">Configurar Perfil</a>
+                <a href="Login.html" class="dropdown-item">Cerrar Sesión</a>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="container">
+        <img src="/img/ULEAM.png" alt="Logo ULEAM Estacionamiento" class="logo-img">
+        <h1>Gestión para control de ingreso de vehículos en la ULEAM</h1>
+    </div>
+    <div class="buttons-container">
+        <a href="ges-estacionamiento.html" class="button">Gestión de Vehículo</a>
+        <a href="control-ingresosalida.html" class="button">Control de Entrada y Salida</a>
+        <a href="historial.html" class="button">Historial de Entrada y Salida</a>
+    </div>
+    <script>
+        document.getElementById("user-icon").addEventListener("click", function() {
+            var dropdown = document.getElementById("dropdown-menu");
+            dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+        });
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-icon') && !event.target.matches('.dropdown-item')) {
+                var dropdown = document.getElementById("dropdown-menu");
+                if (dropdown.style.display === "block") {
+                    dropdown.style.display = "none";
+                }
+            }
+        };
+    </script>
+</body>
+</html>
