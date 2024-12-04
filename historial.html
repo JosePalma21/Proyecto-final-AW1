@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Ingreso y Salida de Vehículos - Estacionamiento ULEAM</title>
+    <link rel="stylesheet" href="historial.css">
+</head>
+<body>
+    <div class="container">
+        <img src="/img/ULEAM.png" alt="Logo ULEAM Estacionamiento" class="logo-img">
+        <h1>Historial de ingreso y salida de vehículos</h1>
+
+        <div class="search-section">
+            <label for="input-placa">Ingrese la placa del vehículo:</label>
+            <input type="text" id="input-placa" placeholder="Ej: ABC123" maxlength="7">
+            <button id="btn-buscar">Buscar</button>
+            <div id="error-message" class="error-message"></div>
+        </div>
+
+        <div class="history-container">
+            <div class="historial-ingreso">
+                <h2>Historial de Ingreso</h2>
+                <ul id="lista-ingresos"></ul>
+            </div>
+            <div class="historial-salida">
+                <h2>Historial de Salida</h2>
+                <ul id="lista-salidas"></ul>
+            </div>
+        </div>
+
+
+        <div id="resultado-busqueda" class="resultado-busqueda"></div>
+
+    </div>
+
+    <script>
+        const inputPlaca = document.getElementById('input-placa');
+        const listaIngresos = document.getElementById('lista-ingresos');
+        const listaSalidas = document.getElementById('lista-salidas');
+        const resultadoBusqueda = document.getElementById('resultado-busqueda');
+        const errorMessage = document.getElementById('error-message');
+    
+        function cargarHistorial() {
+            listaIngresos.innerHTML = '';
+            listaSalidas.innerHTML = '';
+    
+            
+            const vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
+    
+            
+            vehicles
+                .filter(vehicle => vehicle.ingreso)
+                .slice()
+                .reverse()
+                .forEach(vehicle => {
+                    const li = document.createElement('li');
+                    li.textContent = `Placa: ${vehicle.plate} - Fecha: ${vehicle.ingreso.fecha} - Hora: ${vehicle.ingreso.hora}`;
+                    listaIngresos.insertBefore(li, listaIngresos.firstChild);
+                });
+
+            vehicles
+                .filter(vehicle => vehicle.salida)
+                .slice()
+                .reverse()
+                .forEach(vehicle => {
+                    const li = document.createElement('li');
+                    li.textContent = `Placa: ${vehicle.plate} - Fecha: ${vehicle.salida.fecha} - Hora: ${vehicle.salida.hora}`;
+                    listaSalidas.insertBefore(li, listaSalidas.firstChild);
+                });
+        }
+    
+        function buscarVehiculo() {
+            const placa = inputPlaca.value.trim().toUpperCase();
+            if (placa === '') {
+                errorMessage.textContent = 'Por favor, ingrese una placa.';
+                resultadoBusqueda.innerHTML = '';
+                return;
+            }
+    
+            errorMessage.textContent = '';
+    
+
+            const vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
+            
+            const vehiculo = vehicles.find(vehicle => vehicle.plate === placa);
+    
+            if (vehiculo) {
+                let resultado = `Vehículo con placa ${vehiculo.plate} ingresó el ${vehiculo.ingreso.fecha} a las ${vehiculo.ingreso.hora}.`;
+    
+                if (vehiculo.salida) {
+                    resultado +=  `Salió el ${vehiculo.salida.fecha} a las ${vehiculo.salida.hora}.`;
+                } else {
+                    resultado +=  `No ha registrado salida.`;
+                }
+    
+                resultadoBusqueda.textContent = resultado;
+            } else {
+                resultadoBusqueda.textContent = `No se encontró información del vehículo con placa ${placa}.`;
+            }
+        }
+        
+        document.getElementById('btn-buscar').addEventListener('click', buscarVehiculo);
+    
+        window.onload = cargarHistorial;
+    </script>
+</body>
+</html>

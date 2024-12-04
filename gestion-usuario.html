@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="gestion-usuario.css">
+    <title>Gestión de Usuario - Estacionamiento ULEAM</title>
+</head>
+<body>
+    <div class="container">
+        <img src="/img/ULEAM.png" alt="Logo ULEAM Estacionamiento" class="logo-img">
+        <h1>Gestión de usuario</h1>
+        <h2>Registro de datos de usuario</h2>
+        <form id="userForm" onsubmit="agregarUsuario(event)">
+            <label for="codigo">Código de Usuario:</label>
+            <input type="text" id="codigo" name="codigo" required>
+
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+
+            <label for="cedula">Cédula:</label>
+            <input type="text" id="cedula" name="cedula" required>
+
+            <label for="correo">Correo:</label>
+            <input type="email" id="correo" name="correo" required> 
+
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" name="telefono" required>
+
+            <label for="edad">Edad:</label>
+            <input type="number" id="edad" name="edad" required>
+
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" name="direccion" required>
+
+            <label for="periodo">Periodo:</label>
+            <select id="periodo" name="periodo" required>
+                <option value="" disabled selected>Seleccione una opción</option>
+                <option value="matutino">Matutino</option>
+                <option value="vespertino">Vespertino</option>
+                <option value="nocturno">Nocturno</option>
+            </select>
+            <input type="text" id="otherVehicleClass" placeholder="Especificar periodo" style="display:none;" class="input-field">
+            <div class="option-text"></div>
+
+            <label for="tipo">Tipo de Usuario:</label>
+            <select id="tipo" name="tipo" required>
+                <option value="" disabled selected>Seleccione una opción</option>
+                <option value="administrador">Administrador</option>
+                <option value="operador">Operador</option>
+                <option value="otro">Otro</option>
+            </select>
+            <input type="text" id="otherVehicleClass" placeholder="Especificar tipo de usuario" style="display:none;" class="input-field">
+            <div class="option-text"></div>
+
+            <label for="contraseña">Contraseña:</label>
+            <input type="password" id="contraseña" name="contraseña" required>
+
+            <!-- Confirmar Contraseña -->
+            <label for="confirmarContraseña">Confirmar Contraseña:</label>
+            <input type="password" id="confirmarContraseña" name="confirmarContraseña" required>
+
+            <button type="submit">Registrar Usuario</button>
+        </form>
+
+        <br>
+
+        <h2>Búsqueda de usuario</h2>
+        <input type="text" id="codigoBuscar" placeholder="Ingrese código de usuario">
+        <button onclick="buscarUsuario()">Modificar Usuario</button>
+        <button onclick="buscarUsuarioParaEliminar()">Eliminar Usuario</button>
+
+        <div id="formularioModificar" style="display:none;">
+            <h2>Modificar Usuario</h2>
+            <form id="modificarForm" onsubmit="modificarUsuario(event)">
+                <label for="modCodigo">Código de Usuario:</label>
+                <input type="text" id="modCodigo" name="codigo" readonly>
+
+                <label for="modNombre">Nombre:</label>
+                <input type="text" id="modNombre" name="nombre" required>
+
+                <label for="modCedula">Cédula:</label>
+                <input type="text" id="modCedula" name="cedula" required>
+
+                <label for="modCorreo">Correo:</label>
+                <input type="email" id="modCorreo" name="correo" required> 
+
+                <label for="modTelefono">Teléfono:</label>
+                <input type="text" id="modTelefono" name="telefono" required>
+
+                <label for="modEdad">Edad:</label>
+                <input type="number" id="modEdad" name="edad" required>
+
+                <label for="modDireccion">Dirección:</label>
+                <input type="text" id="modDireccion" name="direccion" required>
+
+                <label for="modPeriodo">Periodo:</label>
+                <select id="modPeriodo" name="periodo" required>
+                    <option value="matutino">Matutino</option>
+                    <option value="vespertino">Vespertino</option>
+                    <option value="nocturno">Nocturno</option>
+                </select>
+
+                <label for="modTipo">Tipo de Usuario:</label>
+                <select id="modTipo" name="tipo" required>
+                    <option value="administrador">Administrador</option>
+                    <option value="operador">Operador</option>
+                    <option value="otro">Otro</option>
+                </select>
+
+                <label for="modContraseña">Contraseña:</label>
+                <input type="password" id="modContraseña" name="contraseña" required>
+
+                <label for="modConfirmarContraseña">Confirmar Contraseña:</label>
+                <input type="password" id="modConfirmarContraseña" name="confirmarContraseña" required>
+                
+                <div class="checkbox-container">
+                    <input type="checkbox" id="mostrarContraseñas" onclick="toggleMostrarContraseñas()" />
+                    <label for="mostrarContraseñas">Mostrar contraseñas</label>
+                </div>
+
+                <br>
+                <button type="submit">Guardar Cambios</button>
+                <button type="button" onclick="cancelarModificacion()">Cancelar</button>
+            </form>
+        </div>
+        <div id="confirmarEliminar" style="display:none;">
+            <p>¿Estás seguro de que deseas eliminar este usuario?</p>
+            <button onclick="eliminarUsuario()">Aceptar</button>
+            <button onclick="cancelarEliminacion()">Cancelar</button>
+        </div>
+
+        <br>
+
+
+        <h2>Lista de usuarios registrados</h2>
+        <button onclick="mostrarUsuarios()">Mostrar Usuarios</button>
+
+        <div id="tablaUsuariosContainer" style="display:none;">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Cédula</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Edad</th>
+                        <th>Dirección</th>
+                        <th>Periodo</th>
+                        <th>Tipo</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaUsuarios">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let usuarios = [];
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+        });
+
+
+        function agregarUsuario(event) {
+            event.preventDefault();
+
+            const codigo = document.getElementById('codigo').value;
+            const nombre = document.getElementById('nombre').value;
+            const cedula = document.getElementById('cedula').value;
+            const correo = document.getElementById('correo').value;
+            const telefono = document.getElementById('telefono').value;
+            const edad = document.getElementById('edad').value;
+            const direccion = document.getElementById('direccion').value;
+            const periodo = document.getElementById('periodo').value;
+            const tipo = document.getElementById('tipo').value;
+            const contraseña = document.getElementById('contraseña').value;
+            const confirmarContraseña = document.getElementById('confirmarContraseña').value;
+
+
+            if (!validarCampos(codigo, nombre, cedula, correo, telefono, edad, direccion, contraseña, confirmarContraseña)) {
+                return;
+            }
+
+            
+
+            const usuarioExistente = usuarios.find(user => user.codigo === codigo);
+
+            if (usuarioExistente) {
+                Object.assign(usuarioExistente, { nombre, cedula, correo, telefono, edad, direccion, periodo, tipo, contraseña });
+                alert('Usuario actualizado exitosamente');
+            } else {
+                const nuevoUsuario = { codigo, nombre, cedula, correo, telefono, edad, direccion, periodo, tipo, contraseña };
+                usuarios.push(nuevoUsuario);
+                alert('Usuario registrado exitosamente');
+            }
+
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+            limpiarFormulario();
+        }
+
+        function buscarUsuario() {
+            const codigoBuscar = document.getElementById('codigoBuscar').value;
+            const usuario = usuarios.find(user => user.codigo === codigoBuscar);
+
+            if (usuario) {
+                document.getElementById('modCodigo').value = usuario.codigo;
+                document.getElementById('modNombre').value = usuario.nombre;
+                document.getElementById('modCedula').value = usuario.cedula;
+                document.getElementById('modCorreo').value = usuario.correo;
+                document.getElementById('modTelefono').value = usuario.telefono;
+                document.getElementById('modEdad').value = usuario.edad;
+                document.getElementById('modDireccion').value = usuario.direccion;
+                document.getElementById('modPeriodo').value = usuario.periodo;
+                document.getElementById('modTipo').value = usuario.tipo;
+
+                document.getElementById('modContraseña').value = usuario.contraseña;
+                document.getElementById('modConfirmarContraseña').value = usuario.contraseña;
+
+
+                document.getElementById('formularioModificar').style.display = 'block'; 
+            } else {
+                alert('Usuario no encontrado');
+            }
+        }
+
+
+        function toggleMostrarContraseñas() {
+            const contraseñaField = document.getElementById('modContraseña');
+            const confirmarContraseñaField = document.getElementById('modConfirmarContraseña');
+            const mostrar = document.getElementById('mostrarContraseñas').checked;
+
+            // Cambia el tipo de los campos entre "password" y "text"
+            const tipo = mostrar ? 'text' : 'password';
+            contraseñaField.type = tipo;
+            confirmarContraseñaField.type = tipo;
+        }
+
+
+
+
+        function modificarUsuario(event) {
+            event.preventDefault();
+
+            const codigo = document.getElementById('modCodigo').value;
+            const nombre = document.getElementById('modNombre').value;
+            const cedula = document.getElementById('modCedula').value;
+            const correo = document.getElementById('modCorreo').value;
+            const telefono = document.getElementById('modTelefono').value;
+            const edad = document.getElementById('modEdad').value;
+            const direccion = document.getElementById('modDireccion').value;
+            const periodo = document.getElementById('modPeriodo').value;
+            const tipo = document.getElementById('modTipo').value;
+            const contraseña = document.getElementById('modContraseña').value;
+            const confirmarContraseña = document.getElementById('modConfirmarContraseña').value;
+
+            if (!validarCampos(codigo, nombre, cedula, correo, telefono, edad, direccion, contraseña, confirmarContraseña)) {
+                return;
+            }
+            
+
+            const usuarioIndex = usuarios.findIndex(user => user.codigo === codigo);
+
+
+            if (usuarioIndex !== -1) {
+                usuarios[usuarioIndex] = { 
+                    codigo, 
+                    nombre, 
+                    cedula, 
+                    correo, 
+                    telefono, 
+                    edad, 
+                    direccion, 
+                    periodo, 
+                    tipo, 
+                    contraseña 
+                };
+                localStorage.setItem('usuarios', JSON.stringify(usuarios));
+                alert('Usuario modificado exitosamente');
+                document.getElementById('formularioModificar').style.display = 'none'; 
+                mostrarUsuarios();
+                limpiarFormulario();
+            } else {
+                alert('No se pudo modificar el usuario');
+            }
+        }
+
+        function buscarUsuarioParaEliminar() {
+            const codigoBuscar = document.getElementById('codigoBuscar').value;
+            const usuario = usuarios.find(user => user.codigo === codigoBuscar);
+
+            if (usuario) {
+                document.getElementById('confirmarEliminar').style.display = 'block'; 
+            } else {
+                alert('Usuario no encontrado');
+                document.getElementById('confirmarEliminar').style.display = 'none'; 
+            }
+        }
+
+        function eliminarUsuario() {
+            const codigoBuscar = document.getElementById('codigoBuscar').value;
+            const usuarioIndex = usuarios.findIndex(user => user.codigo === codigoBuscar);
+
+            if (usuarioIndex !== -1) {
+                usuarios.splice(usuarioIndex, 1); 
+                localStorage.setItem('usuarios', JSON.stringify(usuarios)); 
+                alert('Usuario eliminado exitosamente');
+                document.getElementById('confirmarEliminar').style.display = 'none'; 
+                document.getElementById('codigoBuscar').value = '';
+                mostrarUsuarios(); 
+            } else {
+                alert('No se pudo eliminar el usuario');
+            }
+        }
+
+
+
+
+        function validarCampos(codigo, nombre, cedula, correo, telefono, edad, direccion, contraseña, confirmarContraseña) {
+            if (!codigo || !nombre || !cedula || !correo || !telefono || !edad || !direccion || !contraseña || !confirmarContraseña) {
+                alert('Todos los campos son obligatorios');
+                return false;
+            }
+
+            if (contraseña.length < 6 || confirmarContraseña.length < 6) {
+                alert('La contraseña debe tener al menos 6 caracteres.');
+                return false;
+            }
+
+            if (contraseña !== confirmarContraseña) {
+                alert('Las contraseñas no coinciden');
+                return false;
+            }
+            
+
+            if (isNaN(edad) || edad <= 0) {
+                alert('La edad debe ser un número positivo');
+                return false;
+            }
+
+            if (cedula.length < 10) {
+                alert('La cédula debe tener al menos 10 caracteres');
+                return false;
+            }
+
+            const telefonoRegex = /^[0-9]{10}$/;
+            if (!telefonoRegex.test(telefono)) {
+                alert('El teléfono debe contener 10 dígitos.');
+                return false;
+            }
+
+            const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!correoRegex.test(correo)) {
+                alert('El correo no tiene un formato válido.');
+                return false;
+            }
+
+            return true;
+        }
+
+        function cancelarModificacion() {
+            document.getElementById('formularioModificar').style.display = 'none'; 
+            document.getElementById('codigoBuscar').value = ''; 
+        }
+
+        function cancelarEliminacion() {
+            document.getElementById('confirmarEliminar').style.display = 'none'; 
+            document.getElementById('codigoBuscar').value = ''; 
+        }
+
+
+     
+        function mostrarUsuarios() {
+            const tablaUsuarios = document.getElementById('tablaUsuarios');
+            tablaUsuarios.innerHTML = '';
+
+            usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+            if (usuarios.length === 0) {
+                alert('No hay usuarios registrados.');
+                document.getElementById('tablaUsuariosContainer').style.display = 'none';
+                return;
+            }
+
+            usuarios.forEach(usuario => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${usuario.codigo}</td>
+                    <td>${usuario.nombre}</td>
+                    <td>${usuario.cedula}</td>
+                    <td>${usuario.correo}</td>
+                    <td>${usuario.telefono}</td>
+                    <td>${usuario.edad}</td>
+                    <td>${usuario.direccion}</td>
+                    <td>${usuario.periodo}</td>
+                    <td>${usuario.tipo}</td>`;
+                tablaUsuarios.appendChild(row);
+            });
+
+            document.getElementById('tablaUsuariosContainer').style.display = 'block';
+        }
+
+        
+        function limpiarFormulario() {
+            document.getElementById('userForm').reset();
+        }
+    </script>
+</body>
+</html>

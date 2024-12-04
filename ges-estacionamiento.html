@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Vehículo - Estacionamiento ULEAM</title>
+    <link rel="stylesheet" href="ges-estacionamiento.css">
+</head>
+<body>
+    <div class="container">
+        <img src="/img/ULEAM.png" alt="Logo ULEAM Estacionamiento" class="logo-img">
+        <h1>Gestión de estacionamiento ULEAM</h1>
+        <button class="button" onclick="showSection('registerSection')">Registrar Vehículo</button>
+        <button class="button" onclick="showSection('updateSection')">Actualizar Vehículo</button>
+        <button class="button" onclick="showSection('consultGeneralSection')">Consulta General</button>
+        <button class="button" onclick="showSection('consultIndividualSection')">Consulta Individual</button>
+        <button class="button" onclick="showSection('deleteSection')">Eliminar Vehículo</button>
+        <button class="button" onclick="downloadXML()">Descargar archivo XML</button>
+        <button class="button" onclick="downloadJSON()">Descargar archivo JSON</button>
+
+        <div id="registerSection" class="form-section" style="display: none;">
+            <h2>Registrar Vehículo</h2>
+            <label class="label" for="plate">Placa:</label>
+            <input class="input-field" type="text" id="plate" placeholder="Ejemplo: ABC123" required>
+            <br>
+
+            <label class="label" for="vehicleClass">Clase de Vehículo:</label>
+            <select class="input-field" id="vehicleClass" required>
+                <option value="" disabled selected>Seleccione una opción</option>
+                <option value="Sedan">Sedan</option>
+                <option value="SUV">SUV</option>
+                <option value="Camioneta">Camioneta</option>
+                <option value="Moto">Moto</option>
+                <option value="Otro">Otro</option>
+            </select>
+            <input type="text" id="otherVehicleClass" placeholder="Especificar clase" style="display:none;" class="input-field">
+            <div class="option-text"></div>
+            <br>
+
+            <label class="label" for="owner">Propietario:</label>
+            <input class="input-field" type="text" id="owner" required>
+            <br>
+
+            <h3>Persona Autorizada</h3>
+            <label class="label" for="authorizedName">Nombre:</label>
+            <input class="input-field" type="text" id="authorizedName" required>
+            <br>
+
+            <label class="label" for="authorizedId">Cédula:</label>
+            <input class="input-field" type="text" id="authorizedId" class="input-field" required>
+            <br>
+
+            <label class="label" for="authorizedPhone">Teléfono:</label>
+            <input class="input-field" type="text" id="authorizedPhone" placeholder="Ejemplo: +56912345678" class="input-field" required>
+            <br>
+
+            <label class="label" for="authorizedPosition">Cargo:</label>
+            <select class="input-field" id="authorizedPosition" required>
+                <option value="" disabled selected>Seleccione una opción</option>
+                <option value="Administrador">Administrador</option>
+                <option value="Docente">Docente</option>
+                <option value="Estudiante">Estudiante</option>
+                <option value="Otro">Otro</option>
+            </select>
+            <input type="text" id="otherPosition" placeholder="Especificar cargo" style="display:none;" class="input-field">
+            <div class="option-text"></div>
+            <br>
+
+            <button class="button" onclick="registerVehicle()">Registrar</button>
+            <button class="button" onclick="clearForm()">Limpiar</button>
+            <button class="button" onclick="showSection('')">Regresar</button>
+        </div>
+
+        <div id="updateSection" class="form-section" style="display: none;">
+            <h2>Actualizar Vehículo</h2>
+            <label class="label" for="updatePlate">Placa:</label>
+            <input class="input-field" type="text" id="updatePlate" placeholder="Ejemplo: ABC123" required>
+            <button class="button" onclick="searchAndUpdateVehicle()">Buscar</button>
+            <button class="button" onclick="showSection('')">Regresar</button>
+
+            <div id="updateVehicleFields" style="display: none;">
+                <label class="label" for="vehicleClassUpdate">Clase de Vehículo:</label>
+                <select class="input-field" id="vehicleClassUpdate" required>
+                    <option value="" disabled selected>Seleccione una opción</option>
+                    <option value="Sedan">Sedan</option>
+                    <option value="SUV">SUV</option>
+                    <option value="Camioneta">Camioneta</option>
+                    <option value="Moto">Moto</option>
+                    <option value="Otro">Otro</option>
+                </select>
+                <input type="text" id="otherVehicleClass" placeholder="Especificar clase" style="display:none;" class="input-field">                
+                <div class="option-text"></div>
+                <br>
+
+                <label class="label" for="ownerUpdate">Propietario:</label>
+                <input class="input-field" type="text" id="ownerUpdate" required>
+                <br>
+
+                <h3>Persona Autorizada</h3>
+                <label class="label" for="authorizedNameUpdate">Nombre:</label>
+                <input class="input-field" type="text" id="authorizedNameUpdate" required>
+                <br>
+
+                <label class="label" for="authorizedIdUpdate">Cédula:</label>
+                <input class="input-field" type="text" id="authorizedIdUpdate" required>
+                <br>
+
+                <label class="label" for="authorizedPhoneUpdate">Teléfono:</label>
+                <input class="input-field" type="text" id="authorizedPhoneUpdate" placeholder="Ejemplo: +56912345678" class="input-field" required>
+                <br>
+
+                <label class="label" for="authorizedPositionUpdate">Cargo:</label>
+                <select class="input-field" id="authorizedPositionUpdate" required>
+                    <option value="" disabled selected>Seleccione una opción</option>
+                    <option value="Administrador">Administrador</option>
+                    <option value="Docente">Docente</option>
+                    <option value="Estudiante">Estudiante</option>
+                    <option value="Otro">Otro</option>
+                </select>
+                <input type="text" id="otherPosition" placeholder="Especificar cargo" style="display:none;" class="input-field">
+                <div class="option-text"></div>
+                <br>
+                
+                <button class="button" onclick="updateVehicle()">Actualizar</button>
+                <button class="button" onclick="resetUpdateForm()">Cancelar</button>
+            </div>
+        </div>
+
+        <div id="consultGeneralSection" class="form-section" style="display: none;">
+            <h2>Consulta General de Vehículos</h2>
+            <button class="button" onclick="consultGeneral()">Mostrar Vehículos Registrados</button>
+            <button class="button" onclick="resetGeneralConsult()">Regresar</button>
+            <table id="vehiclesTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Nombre Persona Autorizada</th>
+                        <th>Cédula</th>
+                    </tr>
+                </thead>
+                <tbody id="vehiclesTableBody"></tbody>
+            </table>
+        </div>
+
+        <div id="consultIndividualSection" class="form-section" style="display: none;">
+            <h2>Consulta Individual de Vehículo</h2>
+            <label class="label" for="consultPlate">Placa:</label>
+            <input class="input-field" type="text" id="consultPlate" placeholder="Ejemplo: ABC123" class="input-field">
+            <button class="button" onclick="consultIndividual()">Buscar</button>
+            <button class="button" onclick="showSection('')">Regresar</button>
+            
+        
+            <div id="vehicleDetails" style="display: none;">
+                <h3>Detalles del Vehículo</h3>
+                <p><strong>Placa:</strong> <span id="vehiclePlateDetail"></span></p>
+                <p><strong>Clase de Vehículo:</strong> <span id="vehicleClassDetail"></span></p>
+                <p><strong>Propietario:</strong> <span id="ownerDetail"></span></p>
+                <p><strong>Nombre Persona Autorizada:</strong> <span id="authorizedNameDetail"></span></p>
+                <p><strong>Cédula:</strong> <span id="authorizedIdDetail"></span></p>
+                <p><strong>Teléfono:</strong> <span id="authorizedPhoneDetail"></span></p>
+                <p><strong>Cargo:</strong> <span id="authorizedPositionDetail"></span></p>
+            </div>
+        </div>
+
+        <div id="deleteSection" class="form-section" style="display: none;">
+            <h2>Eliminar Vehículo</h2>
+            <label class="label" for="deletePlate">Placa:</label>
+            <input class="input-field" type="text" id="deletePlate" placeholder="Ejemplo: ABC123" class="input-field">
+            <button class="button" onclick="deleteVehicle()">Eliminar</button>
+            <button class="button" onclick="showSection('')">Regresar</button>
+        </div>
+    </div>
+
+    <script>
+        let vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
+        let vehicleToUpdate = null;
+
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.form-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+
+ 
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
+
+        function validatePlate(plate) {
+            const plateRegex = /^[A-Z0-9]{6,7}$/i; 
+            return plateRegex.test(plate);
+        }
+
+        function validateCedula(id) {
+            const cedulaRegex = /^[0-9]{7,10}$/; 
+            return cedulaRegex.test(id);
+        }
+
+        function validatePhone(phone) {
+            const phoneRegex = /^\+?[0-9]{7,12}$/; 
+            return phoneRegex.test(phone);
+        }
+
+        function registerVehicle() {
+            const plate = document.getElementById('plate').value;
+            const vehicleClass = document.getElementById('vehicleClass').value === 'Otro' ? document.getElementById('otherVehicleClass').value : document.getElementById('vehicleClass').value;
+            const owner = document.getElementById('owner').value;
+            const authorizedPerson = {
+                name: document.getElementById('authorizedName').value,
+                id: document.getElementById('authorizedId').value,
+                phone: document.getElementById('authorizedPhone').value,
+                position: document.getElementById('authorizedPosition').value === 'Otro' ? document.getElementById('otherPosition').value : document.getElementById('authorizedPosition').value
+            };
+
+            // Validaciones
+            if (!validatePlate(plate)) {
+                alert('Placa no válida. Debe contener entre 6 y 7 caracteres alfanuméricos.');
+                return;
+            }
+            if (!vehicleClass) {
+                alert('Clase de vehículo es obligatoria.');
+                return;
+            }
+            if (!owner) {
+                alert('Propietario es obligatorio.');
+                return;
+            }
+            if (!authorizedPerson.name || !validateCedula(authorizedPerson.id)) {
+                alert('Datos de la persona autorizada no válidos. Verifique el nombre y la cédula.');
+                return;
+            }
+            if (authorizedPerson.phone && !validatePhone(authorizedPerson.phone)) {
+                alert('Número de teléfono no válido.');
+                return;
+            }
+
+            vehicles.push({ plate, vehicleClass, owner, authorizedPerson });
+            localStorage.setItem('vehicles', JSON.stringify(vehicles)); 
+            alert('Vehículo registrado con éxito');
+            clearForm();
+        }
+
+        function findVehicle(plate) {
+            return vehicles.find(v => v.plate === plate);
+        }
+
+        function searchAndUpdateVehicle() {
+            const plate = document.getElementById('updatePlate').value;
+            vehicleToUpdate = findVehicle(plate);
+
+            if (vehicleToUpdate) {
+                document.getElementById('updatePlate').disabled = true; 
+                document.getElementById('vehicleClassUpdate').value = vehicleToUpdate.vehicleClass;
+                document.getElementById('ownerUpdate').value = vehicleToUpdate.owner;
+                document.getElementById('authorizedNameUpdate').value = vehicleToUpdate.authorizedPerson.name;
+                document.getElementById('authorizedIdUpdate').value = vehicleToUpdate.authorizedPerson.id;
+                document.getElementById('authorizedPhoneUpdate').value = vehicleToUpdate.authorizedPerson.phone;
+                document.getElementById('authorizedPositionUpdate').value = vehicleToUpdate.authorizedPerson.position;
+
+                
+                document.getElementById('updateVehicleFields').style.display = 'block';
+            } else {
+                alert('Vehículo no encontrado.');
+            }
+        }
+
+        function updateVehicle() {
+            const vehicleClass = document.getElementById('vehicleClassUpdate').value;
+            const owner = document.getElementById('ownerUpdate').value;
+            const authorizedName = document.getElementById('authorizedNameUpdate').value;
+            const authorizedId = document.getElementById('authorizedIdUpdate').value;
+            const authorizedPhone = document.getElementById('authorizedPhoneUpdate').value;
+            const authorizedPosition = document.getElementById('authorizedPositionUpdate').value;
+
+            if (!vehicleClass) {
+                alert('Clase de vehículo es obligatoria.');
+                return;
+            }
+            if (!owner) {
+                alert('Propietario es obligatorio.');
+                return;
+            }
+            if (!authorizedName) {
+                alert('Nombre de la persona autorizada es obligatorio.');
+                return;
+            }
+            if (!validateCedula(authorizedId)) {
+                alert('Cédula no válida. Debe contener entre 7 y 10 dígitos.');
+                return;
+            }
+            if (authorizedPhone && !validatePhone(authorizedPhone)) {
+                alert('Número de teléfono no válido.');
+                return;
+            }
+            if (!authorizedPosition) {
+                alert('Cargo es obligatorio.');
+                return;
+            }
+
+            vehicleToUpdate.vehicleClass = vehicleClass;
+            vehicleToUpdate.owner = owner;
+            vehicleToUpdate.authorizedPerson.name = authorizedName;
+            vehicleToUpdate.authorizedPerson.id = authorizedId;
+            vehicleToUpdate.authorizedPerson.phone = authorizedPhone;
+            vehicleToUpdate.authorizedPerson.position = authorizedPosition;
+
+            localStorage.setItem('vehicles', JSON.stringify(vehicles)); 
+            alert('Vehículo actualizado con éxito');
+            clearForm();
+            resetUpdateForm();
+        }
+
+        function resetUpdateForm() {
+
+            document.getElementById('updatePlate').value = '';
+            document.getElementById('updatePlate').disabled = false;
+            document.getElementById('updateVehicleFields').style.display = 'none';
+        }
+
+        function clearForm() {
+            document.getElementById('plate').value = '';
+            document.getElementById('vehicleClass').value = '';
+            document.getElementById('otherVehicleClass').value = '';
+            document.getElementById('owner').value = '';
+            document.getElementById('authorizedName').value = '';
+            document.getElementById('authorizedId').value = '';
+            document.getElementById('authorizedPhone').value = '';
+            document.getElementById('authorizedPosition').value = '';
+            document.getElementById('otherPosition').value = '';
+        }
+
+        function consultGeneral() {
+            const tableBody = document.getElementById('vehiclesTableBody');
+            tableBody.innerHTML = ''; 
+
+            if (vehicles.length === 0) {
+                alert('No hay vehículos registrados.');
+                return;
+            }
+
+            
+            vehicles.forEach(vehicle => {
+                const row = document.createElement('tr');
+
+                const plateCell = document.createElement('td');
+                plateCell.textContent = vehicle.plate;
+                row.appendChild(plateCell);
+
+                const nameCell = document.createElement('td');
+                nameCell.textContent = vehicle.authorizedPerson.name;
+                row.appendChild(nameCell);
+
+                const idCell = document.createElement('td');
+                idCell.textContent = vehicle.authorizedPerson.id;
+                row.appendChild(idCell);
+
+                tableBody.appendChild(row);
+            });
+
+            document.getElementById('vehiclesTable').style.display = 'table';
+            alert('Listado de vehículos registrados');
+        }
+
+        function resetGeneralConsult() {
+
+            document.getElementById('vehiclesTable').style.display = 'none';
+            showSection('');
+        }
+
+
+        window.onload = function() {
+
+        };
+
+        function consultIndividual() {
+        const plate = document.getElementById('consultPlate').value;
+        const vehicle = findVehicle(plate);
+
+            if (vehicle) {
+
+                document.getElementById('vehiclePlateDetail').textContent = vehicle.plate;
+                document.getElementById('vehicleClassDetail').textContent = vehicle.vehicleClass;
+                document.getElementById('ownerDetail').textContent = vehicle.owner;
+                document.getElementById('authorizedNameDetail').textContent = vehicle.authorizedPerson.name;
+                document.getElementById('authorizedIdDetail').textContent = vehicle.authorizedPerson.id;
+                document.getElementById('authorizedPhoneDetail').textContent = vehicle.authorizedPerson.phone;
+                document.getElementById('authorizedPositionDetail').textContent = vehicle.authorizedPerson.position;
+
+                document.getElementById('vehicleDetails').style.display = 'block';
+            } else {
+                alert('Vehículo no encontrado.');
+                document.getElementById('vehicleDetails').style.display = 'none'; 
+            }
+        }
+
+        function deleteVehicle() {
+            const plate = document.getElementById('deletePlate').value;
+            const vehicleIndex = vehicles.findIndex(v => v.plate === plate);
+
+            if (vehicleIndex !== -1) {
+                vehicles.splice(vehicleIndex, 1); 
+                localStorage.setItem('vehicles', JSON.stringify(vehicles)); 
+                alert('Vehículo eliminado con éxito');
+                document.getElementById('deletePlate').value = ''; 
+            } else {
+                alert('Vehículo no encontrado.');
+            }
+        }
+
+        function generateXML(vehicles) {
+            let xmlContent = `<?xml version="1.0" encoding="UTF-8"?>\n<vehicles>\n`;
+    
+            vehicles.forEach(vehicle => {
+                xmlContent += `  <vehiculo>\n`;
+                xmlContent += `    <placa>${vehicle.plate}</placa>\n`;
+                xmlContent += `    <clasedevehiculo>${vehicle.vehicleClass}</clasedevehiculo>\n`;
+                xmlContent += `    <propietario>${vehicle.owner}</propietario>\n`;
+                xmlContent += `    <personaautorizada>\n`;
+                xmlContent += `      <nombre>${vehicle.authorizedPerson.name}</nombre>\n`;
+                xmlContent += `      <cedula>${vehicle.authorizedPerson.id}</cedula>\n`;
+                xmlContent += `      <telefono>${vehicle.authorizedPerson.phone}</telefono>\n`;
+                xmlContent += `      <cargo>${vehicle.authorizedPerson.position}</cargo>\n`;
+                xmlContent += `    </personaautorizada>\n`;
+                xmlContent += `  </vehiculo>\n`;
+            });
+
+            xmlContent += `</vehicles>`;
+
+            return xmlContent;
+        }
+
+        function downloadXML() {
+            const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
+
+            if (vehicles.length === 0) {
+                alert("No hay vehículos registrados para descargar.");
+                return;
+            }
+
+
+            const xmlContent = generateXML(vehicles);
+
+
+            const blob = new Blob([xmlContent], { type: "application/xml" });
+
+        
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "vehiculos.xml"; 
+
+            
+            link.click();
+        }
+
+        function generateJSON(vehicles) {
+            
+            const jsonObject = {
+                vehiculo: vehicles.map(vehicle => ({
+                    placa: vehicle.plate,
+                    clasedevehiculo: vehicle.vehicleClass,
+                    propietario: vehicle.owner,
+                    personaautorizada: {
+                        nombre: vehicle.authorizedPerson.name,
+                        cedula: vehicle.authorizedPerson.id,
+                        telefono: vehicle.authorizedPerson.phone,
+                        cargo: vehicle.authorizedPerson.position
+                    }
+                }))
+            };
+
+            // Convertir el objeto JSON a una cadena con formato
+            return JSON.stringify(jsonObject, null, 2);
+        }
+
+        function downloadJSON() {
+         
+            const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
+
+            if (vehicles.length === 0) {
+                alert("No hay vehículos registrados para descargar.");
+                return;
+            }
+
+            
+            const jsonContent = generateJSON(vehicles);
+
+            
+            const blob = new Blob([jsonContent], { type: "application/json" });
+
+            
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "vehiculos.json"; 
+
+            
+            link.click();
+        }
+    </script>
+
+    <script>
+
+        document.getElementById('vehicleClass').addEventListener('change', function() {
+            const otherInput = document.getElementById('otherVehicleClass');
+            otherInput.style.display = this.value === 'Otro' ? 'block' : 'none';
+        });
+
+      
+        document.getElementById('authorizedPosition').addEventListener('change', function() {
+            const otherInput = document.getElementById('otherPosition');
+            otherInput.style.display = this.value === 'Otro' ? 'block' : 'none';
+        });
+
+
+        document.getElementById('authorizedPositionUpdate').addEventListener('change', function() {
+            const otherInput = document.getElementById('otherPosition');
+            otherInput.style.display = this.value === 'Otro' ? 'block' : 'none';
+        });
+    </script>
+</body>
+</html>

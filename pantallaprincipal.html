@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Principal - Estacionamiento ULEAM</title>
+    <link rel="stylesheet" href="pantallaprincipal.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="top-bar">
+            <div class="user-menu">
+                <img src="/img/perfil.png" alt="Usuario" class="user-icon" @click="toggleDropdown">
+                <div class="dropdown" v-if="dropdownVisible">
+                    <a href="config-perfil.html" class="dropdown-item">Configurar Perfil</a>
+                    <a href="Login.html" class="dropdown-item">Cerrar Sesión</a>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <img src="/img/ULEAM.png" alt="Logo ULEAM Estacionamiento" class="logo-img">
+            <h1>{{ titulo }}</h1>
+        </div>
+        <div class="buttons-container">
+            <a v-for="button in buttons" :href="button.link" class="button">{{ button.text }}</a>
+        </div>
+    </div>
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    titulo: 'Gestión para control de ingreso de vehículos en la ULEAM',
+                    dropdownVisible: false,
+                    buttons: [
+                        { text: 'Gestión de Vehículo', link: 'ges-estacionamiento.html' },
+                        { text: 'Control de Entrada y Salida', link: 'control-ingresosalida.html' },
+                        { text: 'Historial de Entrada y Salida', link: 'historial.html' },
+                    ]
+                };
+            },
+            methods: {
+                toggleDropdown() {
+                    this.dropdownVisible = !this.dropdownVisible;
+                }
+            }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+</html>
+

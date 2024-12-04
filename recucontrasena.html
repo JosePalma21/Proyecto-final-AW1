@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="recucontrasena.css">
+    <title>Recuperación de Contraseña - Estacionamiento ULEAM</title>
+</head>
+<body>
+    <div class="container">
+        <img src="/img/ULEAM.png" alt="Logo ULEAM Estacionamiento" class="logo-img">
+        <h1>Recuperación de Contraseña</h1>
+        <form id="formCorreo" onsubmit="verificarCorreo(event)">
+            <label for="correoRecuperacion">Correo:</label>
+            <input type="email" id="correoRecuperacion" name="correoRecuperacion" required>
+            <button type="submit">Verificar Correo</button>
+        </form>
+
+        <div id="formContraseña" style="display:none;">
+            <form id="recuperacionForm" onsubmit="recuperarContraseña(event)">
+                <label for="nuevaContraseña">Nueva Contraseña:</label>
+                <input type="password" id="nuevaContraseña" name="nuevaContraseña" required>
+
+                <label for="confirmarNuevaContraseña">Confirmar Nueva Contraseña:</label>
+                <input type="password" id="confirmarNuevaContraseña" name="confirmarNuevaContraseña" required>
+                <br>
+                <button type="submit">Guardar Contraseña</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+        function verificarCorreo(event) {
+            event.preventDefault();
+
+            const correo = document.getElementById('correoRecuperacion').value;
+            
+            if (!validateEmail(correo)) {
+                alert('Por favor ingrese un correo válido');
+                return;
+            }else{
+                alert('Correo válido')
+            }
+
+            const usuario = usuarios.find(user => user.correo === correo);
+
+            if (usuario) {
+                document.getElementById('formCorreo').style.display = 'none';
+                document.getElementById('formContraseña').style.display = 'block';
+            } else {
+                alert('Correo no encontrado');
+            }
+        }
+
+        function validateEmail(email) {
+            const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+ 
+        function recuperarContraseña(event) {
+            event.preventDefault();
+
+            const correo = document.getElementById('correoRecuperacion').value;
+            const nuevaContraseña = document.getElementById('nuevaContraseña').value;
+            const confirmarNuevaContraseña = document.getElementById('confirmarNuevaContraseña').value;
+
+
+            if (nuevaContraseña.length < 6 || confirmarNuevaContraseña.length < 6) {
+            alert('La contraseña deben tener al menos 6 caracteres');
+            return;
+            }
+
+
+            if (nuevaContraseña !== confirmarNuevaContraseña) {
+                alert('Las contraseñas no coinciden');
+                return;
+            }
+
+            const usuario = usuarios.find(user => user.correo === correo);
+            if (usuario) {
+                usuario.contraseña = nuevaContraseña;
+                localStorage.setItem('usuarios', JSON.stringify(usuarios));
+                alert('Contraseña actualizada exitosamente');
+                document.getElementById('recuperacionForm').reset();
+                document.getElementById('formCorreo').style.display = 'block';
+                document.getElementById('formContraseña').style.display = 'none';
+            } else {
+                alert('Correo no encontrado');
+            }
+        }
+    </script>
+</body>
+</html>

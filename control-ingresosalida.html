@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Ingreso y Salida de Vehículos - Estacionamiento ULEAM</title>
+    <link rel="stylesheet" href="control-ingresosalida.css">
+</head>
+<body>
+    <div class="container">
+        <img src="/img/ULEAM.png" alt="Logo ULEAM Estacionamiento" class="logo-img">
+        <h1>Control de Ingreso y Salida de Vehículos ULEAM</h1>
+
+        
+        <div class="section">
+            <h2>Ingreso de Vehículo</h2>
+            <form id="ingresoForm">
+                <label for="placaIngreso">Placa del Vehículo:</label>
+                <input type="text" id="placaIngreso" name="placaIngreso" required>
+                <button type="submit">Verificar Ingreso</button>
+            </form>
+            <div id="ingresoInfo" class="info">
+                <p id="ingresoMensaje"></p>
+            </div>
+            
+            <div id="ingresoDetalles" style="display:none;">
+                <h3>Registrar Ingreso</h3>
+                <br>
+                <label for="ingresoFecha">Fecha de Ingreso:</label>
+                <input type="date" id="ingresoFecha" required>
+                <br>
+                <label for="ingresoHora">Hora de Ingreso:</label>
+                <input type="time" id="ingresoHora" required>
+                <br>
+                <button onclick="guardarIngreso()">Guardar Ingreso</button>
+            </div>
+        </div>  
+        
+        <div class="separator"></div>
+
+        <div class="section">
+            <h2>Salida de Vehículo</h2>
+            <form id="salidaForm">
+                <label for="placaSalida">Placa del Vehículo:</label>
+                <input type="text" id="placaSalida" name="placaSalida" required>
+                <button type="submit">Verificar Salida</button>
+            </form>
+            <div id="salidaInfo" class="info">
+                <p id="salidaMensaje"></p>
+            </div>
+
+            <div id="salidaDetalles" style="display:none;">
+                <h3>Registrar Salida</h3>
+                <br>
+                <label for="salidaFecha">Fecha de Salida:</label>
+                <input type="date" id="salidaFecha" required>
+                <br>
+                <label for="salidaHora">Hora de Salida:</label>
+                <input type="time" id="salidaHora" required>
+                <br>
+                <button onclick="guardarSalida()">Guardar Salida</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function obtenerVehiculoPorPlaca(placa) {
+            const vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
+            return vehicles.find(vehicle => vehicle.plate === placa);
+        }
+
+        document.getElementById('ingresoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const placa = document.getElementById('placaIngreso').value;
+
+            const vehiculo = obtenerVehiculoPorPlaca(placa);
+            if (vehiculo) {
+                alert('Vehículo registrado.');
+                document.getElementById('ingresoDetalles').style.display = 'block';
+                document.getElementById('ingresoMensaje').textContent = ''; 
+            } else {
+                alert('Vehículo no registrado.');
+                document.getElementById('ingresoDetalles').style.display = 'none'; 
+            }
+        });
+
+        document.getElementById('salidaForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const placa = document.getElementById('placaSalida').value;
+
+            const vehiculo = obtenerVehiculoPorPlaca(placa);
+            if (vehiculo) {
+                if (vehiculo.ingreso) {
+                    if (vehiculo.salida) {
+                        alert('Acceso denegado. Vehículo ya ha salido. Debe ingresar nuevamente para poder salir.');
+                        document.getElementById('salidaDetalles').style.display = 'none'; 
+                    } else {
+                        alert('Vehículo registrado.');
+                        document.getElementById('salidaDetalles').style.display = 'block';
+                        document.getElementById('salidaMensaje').textContent = ''; 
+                    }
+                } else {
+                    alert('Acceso denegado. Vehículo no ha ingresado.');
+                    document.getElementById('salidaDetalles').style.display = 'none'; 
+                }
+            } else {
+                alert('Vehículo no registrado.');
+                document.getElementById('salidaDetalles').style.display = 'none'; 
+            }
+        });
+
+
+        function guardarIngreso() {
+            const placa = document.getElementById('placaIngreso').value;
+            const fechaIngreso = document.getElementById('ingresoFecha').value;
+            const horaIngreso = document.getElementById('ingresoHora').value;
+
+            if (fechaIngreso && horaIngreso) {
+                const vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
+                const vehiculo = vehicles.find(v => v.plate === placa);
+
+                if (vehiculo) {
+                    vehiculo.ingreso = { fecha: fechaIngreso, hora: horaIngreso };
+                    vehiculo.salida = null;
+                    localStorage.setItem('vehicles', JSON.stringify(vehicles)); 
+                    alert('Ingreso registrado correctamente.');
+
+                    document.getElementById('placaIngreso').value = '';
+                    document.getElementById('ingresoFecha').value = '';
+                    document.getElementById('ingresoHora').value = '';
+                    document.getElementById('ingresoDetalles').style.display = 'none';
+                } else {
+                    alert('Vehículo no registrado.');
+                }
+            } else {
+                alert('Por favor, complete la fecha y hora de ingreso.');
+            }
+        }
+
+        function guardarSalida() {
+            const placa = document.getElementById('placaSalida').value;
+            const fechaSalida = document.getElementById('salidaFecha').value;
+            const horaSalida = document.getElementById('salidaHora').value;
+
+            if (fechaSalida && horaSalida) {
+                const vehicles = JSON.parse(localStorage.getItem('vehicles')) || [];
+                const vehiculo = vehicles.find(v => v.plate === placa);
+
+                if (vehiculo && !vehiculo.salida) {
+                    vehiculo.salida = { fecha: fechaSalida, hora: horaSalida };
+                    localStorage.setItem('vehicles', JSON.stringify(vehicles)); // Guardar el arreglo completo
+                    alert('Salida registrada correctamente.');
+
+                    document.getElementById('placaSalida').value = '';
+                    document.getElementById('salidaFecha').value = '';
+                    document.getElementById('salidaHora').value = '';
+                    document.getElementById('salidaDetalles').style.display = 'none';
+                } else if (vehiculo && vehiculo.salida) {
+                    alert('Acceso denegado. Vehículo ya ha salido. Debe ingresar nuevamente.');
+                } else {
+                    alert('Vehículo no registrado.');
+                }
+            } else {
+                alert('Por favor, complete la fecha y hora de salida.');
+            }
+        }
+    </script>
+</body>
+</html>

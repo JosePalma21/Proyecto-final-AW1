@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f5;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+}
+
+.logo-img {
+    display: block;
+    margin: 0 auto 20px;
+    max-width: 200px;
+    height: auto;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #2e7d32; 
+}
+
+.search-section {
+    margin: 20px 0;
+}
+
+input[type="text"] {
+    padding: 10px;
+    border: 2px solid #2e7d32;
+    border-radius: 5px;
+    width: 250px;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.history-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+.historial-ingreso, .historial-salida {
+    width: 45%;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background-color: #e0f2f1;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    color: #2e7d32;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+.resultado-busqueda {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e8f5e9;
+    border: 2px solid #2e7d32;
+    border-radius: 5px;
+    color: #2e7d32;
+}

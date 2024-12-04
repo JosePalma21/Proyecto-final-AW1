@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="config-perfil.css">
+    <title>Configuración de perfil usuario - Estacionamiento ULEAM</title>
+</head>
+<body>
+    <div class="container">
+        <img src="/img/ULEAM.png" alt="Logo ULEAM Estacionamiento" class="logo-img">
+        <h1>Configuración del perfil de usuario</h1>
+
+        <!-- Campo para ingresar el código de usuario -->
+        <div class="form-group codigo-usuario">
+            <label for="codigoUsuario">Ingresar código de usuario</label>
+            <input type="text" id="codigoUsuario" name="codigoUsuario" required>
+            <button id="verificarCodigo">Verificar</button>
+        </div>
+        
+        <form id="profileForm" style="display:none;">
+            <div class="form-group">
+                <label for="username">Nombre de usuario</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Correo electrónico</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="current-password">Contraseña actual</label>
+                <input type="password" id="current-password" name="current-password" required>
+            </div>
+            <div class="form-group">
+                <label for="new-password">Nueva contraseña</label>
+                <input type="password" id="new-password" name="new-password">
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirmar nueva contraseña</label>
+                <input type="password" id="confirm-password" name="confirm-password">
+            </div>
+            <button type="submit">Guardar Cambios</button>
+        </form>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById('verificarCodigo').addEventListener('click', function() {
+            const codigoUsuario = document.getElementById('codigoUsuario').value.trim();
+            let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+            // Verificar si el código de usuario existe
+            const usuarioEncontrado = usuarios.find(user => user.codigo === codigoUsuario);
+
+            if (usuarioEncontrado) {
+                document.getElementById('profileForm').style.display = 'block'; // Mostrar el formulario si el usuario existe
+                // También puedes rellenar el formulario con datos del usuario
+                document.getElementById('username').value = usuarioEncontrado.nombre;
+                document.getElementById('email').value = usuarioEncontrado.correo;
+            } else {
+                alert('Código de usuario no encontrado'); 
+            }
+        });
+
+        document.getElementById('profileForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const currentPassword = document.getElementById('current-password').value.trim();
+            const newPassword = document.getElementById('new-password').value.trim();
+            const confirmPassword = document.getElementById('confirm-password').value.trim();
+            const messageDiv = document.getElementById('message');
+
+            let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+            const codigoUsuario = document.getElementById('codigoUsuario').value.trim();
+            const usuarioEncontrado = usuarios.find(user => user.codigo === codigoUsuario);
+
+            let message = '';
+
+            if (!usuarioEncontrado) {
+                message = 'Usuario no encontrado.';
+            } else if (usuarioEncontrado.contraseña !== currentPassword) {
+                message = 'La contraseña actual no coincide.';
+            } else {
+                if (newPassword !== '' && newPassword !== confirmPassword) {
+                    message = 'Las nuevas contraseñas no coinciden.';
+                } else {
+                    // Actualizar los datos del usuario
+                    usuarioEncontrado.nombre = username;
+                    usuarioEncontrado.correo = email;
+
+                    if (newPassword !== '') {
+                        usuarioEncontrado.contraseña = newPassword;
+                    }
+
+                    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+                    alert('¡Cambios guardados con éxito!');
+                    messageDiv.innerHTML = '<div class="success">¡Cambios guardados con éxito!</div>';
+                    document.getElementById('profileForm').reset();
+                }
+            }
+
+            if (message !== '') {
+                messageDiv.innerHTML = `<div class="error">${message}</div>`;
+            }
+        });
+    </script>
+</body>
+</html>
